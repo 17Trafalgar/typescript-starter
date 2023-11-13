@@ -1,13 +1,12 @@
 import {
   SubscribeMessage,
   WebSocketGateway,
-  OnGatewayInit,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  MessageBody,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { ChatEntity } from './chat.entity';
 import { ChatService } from './chat.service';
 
 @WebSocketGateway({
@@ -16,17 +15,12 @@ import { ChatService } from './chat.service';
   },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private chatService: ChatService) {}
   @WebSocketServer() server: Server;
 
-  @SubscribeMessage('sendMessage')
-  async handleSendMessage(client: Socket, payload: ChatEntity): Promise<void> {
-    await this.chatService.createMessage(payload);
-    this.server.emit('recMessage', payload);
-  }
-
-  afterInit(server: Server) {
-    /* console.log('Server start'); */
+  @SubscribeMessage('newMessage')
+  newMessage(@MessageBody() body: any) {
+    console.log(body);
+    this.server.emit('onMessage', { msg: 'New Message', content: body });
   }
 
   handleDisconnect(client: Socket) {
@@ -34,6 +28,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Connected ${client.id}`);
+    console.log(`Connected user ${client.id}`);
   }
 }
