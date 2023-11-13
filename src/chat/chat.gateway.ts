@@ -15,7 +15,13 @@ import { ChatService } from './chat.service';
   },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly chatService: ChatService) {}
+
   @WebSocketServer() server: Server;
+
+  handleConnection(client: Socket) {
+    console.log(`Connected user ${client.id}`);
+  }
 
   @SubscribeMessage('newMessage')
   newMessage(@MessageBody() body: any) {
@@ -25,9 +31,5 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleDisconnect(client: Socket) {
     console.log(`Disconnected: ${client.id}`);
-  }
-
-  handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Connected user ${client.id}`);
   }
 }

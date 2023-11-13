@@ -16,8 +16,4 @@ export class ChatService {
   async getMessages(): Promise<ChatEntity[]> {
     return this.chatRepository.find();
   }
-
-  async getMessage(id: number): Promise<ChatEntity> {
-    return this.chatRepository.findOne({ where: { id } });
-  }
 }
