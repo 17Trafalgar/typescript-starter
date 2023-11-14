@@ -1,8 +1,7 @@
 import { Controller, Render, Get, Res, Post, Body } from '@nestjs/common';
-import { ChatService } from './chat.service';
 import { ChatEntity } from './chat.entity';
 
-@Controller()
+/* @Controller()
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
@@ -23,4 +22,4 @@ export class ChatController {
     const messages = await this.chatService.createMessage(body);
     res.json(messages);
   }
-}
+} */

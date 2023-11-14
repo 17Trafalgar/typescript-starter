@@ -5,6 +5,9 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ChatModule } from './chat/chat.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { SocketModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -19,7 +22,12 @@ import { ChatModule } from './chat/chat.module';
         PORT: Joi.number(),
       }),
     }),
+    SocketModule,
     ChatModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', '..', 'dist', 'client'),
+      exclude: ['/api*'],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
